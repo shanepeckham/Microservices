@@ -71,5 +71,85 @@ Navigate to the Azure portal and create a new Azure API Management instance, ent
 See below:
 ![alt text](https://github.com/shanepeckham/ServerlessMicroservices/blob/master/images/apim.png)
 
+This will take a few minutes.
+
+## 3. Provisioning an eventhub instance
+
+Navigate to the Azure portal and create a new Azure event hub instance, enter the following parameters:
+
+* Name: <yourinstancename>
+* ResourceGroup: <yourresourcegroup>
+* Location: <yourlocation>
+
+This will take a few minutes. Once this has completed add an event hub, give it a partition count of 2 (the default) 
+
+## 4. Deploy the containers to Azure Container Instance
+
+Now we will deploy our container to [Azure Container Instances](https://azure.microsoft.com/en-us/services/container-instances/). 
+
+In the command terminal, login using the AZ CLI and we will start off by creating a new resource group for our Container instance. At the time of writing this functionality is still in preview and is thus not available in all regions (it is currently available in westeurope, eastus, westus), hence why we will create a new resource group just in case.
+
+Enter the following:
+
+```
+az group create --name <yourACIresourcegroup> --location <westeurope, eastus, westus>
+```
+
+### Associate the environment variables with Azure Container Instance
+
+We will now deploy our container instance via an ARM template, which is [here](https://github.com/shanepeckham/ContainersOnAzure_MiniLab/blob/master/azuredeploy.json) but before we do, we need to edit this document to ensure we set our environment variables.
+
+
+In the document, the following section needs to be amended, adding your environment keys like you did before:
+
+```
+
+"properties": {
+                "containers": [
+                    {
+                        "name": "[variables('container1name')]",
+                        "properties": {
+                            "image": "[variables('container1image')]",
+                            "environmentVariables": [
+                                {
+                                    "name": "DATABASE",
+                                    "value": "<your cosmodb username from step 1>"
+                                },
+                                {
+                                    "name": "PASSWORD",
+                                    "value": "<your cosmodb password from step 1>"
+                                },
+                                {
+                                    "name": "INSIGHTSKEY",
+                                    "value": "<you app insights key from step 2>"
+                                },
+                                {
+                                    "name": "SOURCE",
+                                    "value": "ACI"
+                                }
+                            ],
+
+```
+
+
+Once this document is saved, we can create the deployment via the az CLI. Enter the following:
+
+```
+az group deployment create --name <yourACIname> --resource-group <yourACIresourcegroup> --template-file /<path to your file>/azuredeploy.json
+```
+
+It is also possible to create the container instance via the Azure CLI directly.
+
+```
+az container create -n go-order-sb -g <yourACIresourcegroup> -e DATABASE=<your cosmodb username from step 1> PASSWORD=<your cosmodb password from step 1> INSIGHTSKEY=<your app insights key from step 2> SOURCE="ACI"--image <yourcontainerregistryinstance>.azurecr.io/go_order_sb:latest --registry-password <your acr admin password>
+```
+
+You can check the status of the deployment by issuing the container list command:
+
+```
+az container show -n go-order-sb -g <yourACIresourcegroup> -o table
+```
+
+Once the container has moved to "Succeeded" state you will see your external IP address under the "IP:ports" column, copy this value and navigate to http://yourACIExternalIP:8080/swagger and test your API like before.
 
 

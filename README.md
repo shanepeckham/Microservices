@@ -1,4 +1,4 @@
-# ServerlessMicroservices
+# Create a full Serverless Microservices stack rapidly
 Create a heterogenous, serverless microservice stack to handle orders with Chuck Norris jokes thrown in
 
 # What is it?

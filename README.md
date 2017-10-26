@@ -69,5 +69,7 @@ Navigate to the Azure portal and create a new Azure API Management instance, ent
 * Administrator email: <youradminemail>
 
 See below:
-![alt text](https://github.com/shanepeckham/ContainersOnAzure_MiniLab/blob/master/images/CosmosDB.png)
+![alt text](https://github.com/shanepeckham/ServerlessMicroservices/blob/master/images/apim.png)
+
+
 

@@ -57,3 +57,17 @@ See below:
 Once the DB is provisioned, we need to get the Database Username and Password, these may be found in the Settings --> Connection Strings section of your DB. We will need these to run our container, so copy them for convenient access. See below:
 
 ![alt text](https://github.com/shanepeckham/ContainersOnAzure_MiniLab/blob/master/images/DBKeys.png)
+
+## 2. Provisioning a API Management instance
+
+Navigate to the Azure portal and create a new Azure API Management instance, enter the following parameters:
+
+* Name: <yourinstancename>
+* ResourceGroup: <yourresourcegroup>
+* Location: <yourlocation>
+* Organisation name: <yourorgname>
+* Administrator email: <youradminemail>
+
+See below:
+![alt text](https://github.com/shanepeckham/ContainersOnAzure_MiniLab/blob/master/images/CosmosDB.png)
+

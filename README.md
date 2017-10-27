@@ -103,6 +103,8 @@ This will take a few minutes. Once this has completed add an event hub, give it 
 
 Now we will deploy our container to [Azure Container Instances](https://azure.microsoft.com/en-us/services/container-instances/). 
 
+We will first deploy the fulfillorder container which provide us with a public endpoint which we will use to route requests to from the nodejs side car container. Note, this fulfillorder endpoint will be publically available, we will look to secure it in the future.
+
 In the command terminal, login using the AZ CLI and we will start off by creating a new resource group for our Container instance. At the time of writing this functionality is still in preview and is thus not available in all regions (it is currently available in westeurope, eastus, westus), hence why we will create a new resource group just in case.
 
 Enter the following:
@@ -111,41 +113,51 @@ Enter the following:
 az group create --name <yourACIresourcegroup> --location <westeurope, eastus, westus>
 ```
 
-### Associate the environment variables with Azure Container Instance
+### Associate the environment variables with the fulfillorder container
 
-We will now deploy our container instance via an ARM template, which is [here](https://github.com/shanepeckham/ContainersOnAzure_MiniLab/blob/master/azuredeploy.json) but before we do, we need to edit this document to ensure we set our environment variables.
+We will now deploy our container instance via a declarative 'infrastructure as code' ARM template, which is [here](https://raw.githubusercontent.com/shanepeckham/ServerlessMicroservices/master/fulfillorder.json) but before we do, we need to edit this document to ensure we set our environment variables.
 
 
 In the document, the following section needs to be amended, adding your environment keys like you did before:
 
 ```
 
-"properties": {
-                "containers": [
-                    {
-                        "name": "[variables('container1name')]",
+"name": "[variables('container1name')]",
                         "properties": {
                             "image": "[variables('container1image')]",
                             "environmentVariables": [
                                 {
                                     "name": "DATABASE",
-                                    "value": "<your cosmodb username from step 1>"
+                                    "value": ""
                                 },
                                 {
                                     "name": "PASSWORD",
-                                    "value": "<your cosmodb password from step 1>"
+                                    "value": ""
                                 },
                                 {
                                     "name": "INSIGHTSKEY",
-                                    "value": "<you app insights key from step 2>"
+                                    "value": ""
                                 },
                                 {
                                     "name": "SOURCE",
                                     "value": "ACI"
+                                },
+                                {
+                                    "name": "EVENTURL",
+                                    "value": "https://[youreventhubname].servicebus.windows.net/[youreventhub]"
+                                },
+                                {
+                                    "name": "EVENTPOLICYNAME",
+                                    "value": "[your policy key]"
+                                },
+                                {
+                                    "name": "EVENTPOLICYKEY",
+                                    "value": "[the access key from your policy]"
                                 }
                             ],
-
 ```
+
+
 
 
 Once this document is saved, we can create the deployment via the az CLI. Enter the following:

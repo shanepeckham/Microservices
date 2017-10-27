@@ -27,6 +27,13 @@ The following technology components are used in this solution:
 * Azure functions to provide event driven compute to do transformations and send email notifications via SendGrid
 * PowerBI to monitor all incoming requests to API Management and provide rich dashboards
 
+# Solution Flow
+
+An Azure Bot service instance will run inside a container on Azure Container Instances to take orders from customers. It will then route the request to API Management which will at runtime determine the subscription level of the customer and route them to the relevant technology stack, e.g. PayAsYouGo customers get routed to a serverless stack with rate limiting, Premium customers get routed to a managed Kubernetes stack. This repo will initially start with the PayAsYouGo serverless stack, the [AKS](https://azure.microsoft.com/en-us/services/container-service/) cluster will be added soon. 
+
+An swagger enabled GO API running on Azure Container Services as part of a container group will handle the order and write it CosmosDb and place it on a partitioned event hub. A sidecar 
+
+
 # Preparing for this lab
 
 For this Lab you will require:

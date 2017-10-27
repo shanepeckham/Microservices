@@ -285,6 +285,8 @@ See below:
 
 ![alt text](https://github.com/shanepeckham/ServerlessMicroservices/blob/master/images/ordergateway.png)
 
+Make a note of the value in "This is what the Web API URL is going to look like:", we will refer to it as [your APIM Endpoint] from now on.
+
 Now click on the Products tab and select 'Add API To Products' and associate the PayAsYouGo and Premium products to the API, see below:
 
 ![alt text](https://github.com/shanepeckham/ServerlessMicroservices/blob/master/images/apiproducts.png)
@@ -380,6 +382,10 @@ This section will intercept the incoming json, amend it and reforward it to our 
 ```
 You should now be able to test your API Management endpoint and see the request flow through the Azure Container Instances with the status of the order changing in CosmosDb.
 
+To do this select the Developer Potal --> API --> OrdersGateway --> Place Order --> Try it.
+
+Make a note of the subscription keys for the PayAsYouGo and Premium subscriptions as we will need these later and will refer to them as [the PayAsYouGo subscription key] and [the Premium subscription key] respectively.
+
 ## 6. Deploy the API Management analytics solution
 
 ![alt text](https://github.com/shanepeckham/ServerlessMicroservices/blob/master/images/apimdashboard.png)
@@ -458,3 +464,13 @@ The last step now before we can test the bot is to navigate back to Settings and
 orderURL: [your APIM Endpoint]
 PayAsYouGo: [the PayAsYouGo subscription key]
 Premium: [the Premium subscription key]
+
+Click Save to commit the changes, you can now test the bot.
+
+Look inside your CosmosDB, if you see an order with the status Processed then all parts are working.
+
+In the Azure portal, navigate back to your Cosmos DB instance and go to the section Data Explorer (note, at the time of writing this is in preview so is subject to change). We can now query for the order we placed. A collection called 'orders' will have been created within your database, you can then apply a filter for the id we created, namely:
+
+See below:
+
+![alt text](https://github.com/shanepeckham/ContainersOnAzure_MiniLab/blob/master/images/CosmosQuery.png)

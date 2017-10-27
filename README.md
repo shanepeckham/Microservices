@@ -385,3 +385,43 @@ You should now be able to test your API Management endpoint and see the request 
 ![alt text](https://github.com/shanepeckham/ServerlessMicroservices/blob/master/images/apimdashboard.png)
 
 Navigate to the [API Management Analytics solution](https://appsource.microsoft.com/en-us/product/web-apps/microsoft-powerbi.pbisolntemplate_apimanagement?tab=Overview) and follow the installation instructions.
+
+## 7. Create an Azure Bot Service app and deploy some code to it
+
+Create a Bot Service app within Azure.
+
+![alt text](https://github.com/shanepeckham/CADScenario_Personalisation/blob/master/images/botsetup1.png)
+
+Click 'Create Microsoft App Id and Password'. This will open up a new window where you will register your Bot App Id. Select 'Generate an app password to continue', see below:
+
+![alt text](https://github.com/shanepeckham/CADScenario_Personalisation/blob/master/images/botsetup2.png)
+
+This will open up a popup with your password in, copy this value for immediate reuse. Note, it only appears this once. Click 'Finish and go back to Bot Framework'. Paste your password in the entry box.
+
+Now select 'NodeJS' in the Choose a Language section and select 'Basic' in the Choose a Template section (at the time of writing this a necessary step even though our code will overwrite these settings) and click 'Create Bot', see below:
+
+![alt text](https://github.com/shanepeckham/CADScenario_Personalisation/blob/master/images/botsetup3.png)
+
+This will take roughly 2-3 minutes, once complete you will be navigated to the code view of the Bot. If all has provisioned correctly you will see the status 'Edit continuous integration'. Click on settings to check the status of the code deploy, see below:
+
+![alt text](https://github.com/shanepeckham/CADScenario_Personalisation/blob/master/images/botsetup4.png)
+
+Now click on the 'Edit' dropdown on the right of the screen in the Continuous Integration section, see below:
+
+![alt text](https://github.com/shanepeckham/CADScenario_Personalisation/blob/master/images/botsetup5.png)
+
+This will open the Continuous Integration menu. Here you can see the status of the code deploy, see below. Select the Configure Continuous Integration button. 
+
+![alt text](https://github.com/shanepeckham/CADScenario_Personalisation/blob/master/images/botsetup6.png)
+
+This will open a blade on the right which will display the status of the deployment source and latest commit, see below:
+
+![alt text](https://github.com/shanepeckham/CADScenario_Personalisation/blob/master/images/botsetup7.png)
+
+Now click on the latest commit, it will open another blade with a 'Redeploy' button, select it. See below:
+
+![alt text](https://github.com/shanepeckham/CADScenario_Personalisation/blob/master/images/botsetup8.png)
+
+If you navigate back to the code view you should now see the first question "What is your email address?" with the chat emulator loaded to the left. See below:
+
+![alt text](https://github.com/shanepeckham/CADScenario_Personalisation/blob/master/images/botsetup9.png)

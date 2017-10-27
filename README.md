@@ -115,7 +115,68 @@ az group create --name <yourACIresourcegroup> --location <westeurope, eastus, we
 
 ### Associate the environment variables with the fulfillorder container
 
-We will now deploy our container instance via a declarative 'infrastructure as code' ARM template, which is [here](https://raw.githubusercontent.com/shanepeckham/ServerlessMicroservices/master/fulfillorder.json) but before we do, we need to edit this document to ensure we set our environment variables.
+We will now deploy our container instance via a declarative 'infrastructure as code' ARM template, which is [here](https://github.com/shanepeckham/ServerlessMicroservices/blob/master/fulfillorder.json) but before we do, we need to edit this document to ensure we set our environment variables.
+
+
+In the document, the following section needs to be amended, adding your environment keys like you did before:
+
+```
+
+"name": "[variables('container1name')]",
+                        "properties": {
+                            "image": "[variables('container1image')]",
+                            "environmentVariables": [
+                                {
+                                    "name": "DATABASE",
+                                    "value": ""
+                                },
+                                {
+                                    "name": "PASSWORD",
+                                    "value": ""
+                                },
+                                {
+                                    "name": "INSIGHTSKEY",
+                                    "value": ""
+                                },
+                                {
+                                    "name": "SOURCE",
+                                    "value": "ACI"
+                                },
+                                {
+                                    "name": "EVENTURL",
+                                    "value": "https://[youreventhubname].servicebus.windows.net/[youreventhub]"
+                                },
+                                {
+                                    "name": "EVENTPOLICYNAME",
+                                    "value": "[your policy key]"
+                                },
+                                {
+                                    "name": "EVENTPOLICYKEY",
+                                    "value": "[the access key from your policy]"
+                                }
+                            ],
+```
+
+
+
+
+Once this document is saved, we can create the deployment via the az CLI. Enter the following:
+
+```
+az group deployment create --name <yourACIname> --resource-group <yourACIresourcegroup> --template-file /<path to your file>/fulfillorder.json
+```
+
+It is also possible to create the container instance via the Azure CLI directly, but it is best practice to deploy declaratively for automation and transparency.
+
+You can check the status of the deployment by issuing the container list command:
+
+```
+az container show -n go-order-sb -g <yourACIresourcegroup> -o table
+```
+
+Once the container has moved to "Succeeded" state you will see your external IP address under the "IP:ports" column, copy this value, we will refer this this ip address as [fulfillorderIP]
+
+We will now deploy a Container Group on Azure Container Instances via a declarative 'infrastructure as code' ARM template, which is [here](https://github.com/shanepeckham/ServerlessMicroservices/blob/master/fulfillorder.json) but before we do, we need to edit this document to ensure we set our environment variables.
 
 
 In the document, the following section needs to be amended, adding your environment keys like you did before:
@@ -165,19 +226,3 @@ Once this document is saved, we can create the deployment via the az CLI. Enter 
 ```
 az group deployment create --name <yourACIname> --resource-group <yourACIresourcegroup> --template-file /<path to your file>/azuredeploy.json
 ```
-
-It is also possible to create the container instance via the Azure CLI directly.
-
-```
-az container create -n go-order-sb -g <yourACIresourcegroup> -e DATABASE=<your cosmodb username from step 1> PASSWORD=<your cosmodb password from step 1> INSIGHTSKEY=<your app insights key from step 2> SOURCE="ACI"--image <yourcontainerregistryinstance>.azurecr.io/go_order_sb:latest --registry-password <your acr admin password>
-```
-
-You can check the status of the deployment by issuing the container list command:
-
-```
-az container show -n go-order-sb -g <yourACIresourcegroup> -o table
-```
-
-Once the container has moved to "Succeeded" state you will see your external IP address under the "IP:ports" column, copy this value and navigate to http://yourACIExternalIP:8080/swagger and test your API like before.
-
-

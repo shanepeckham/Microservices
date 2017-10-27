@@ -382,6 +382,6 @@ You should now be able to test your API Management endpoint and see the request 
 
 ## 6. Deploy the API Management analytics solution
 
-![alt text](https://github.com/shanepeckham/ServerlessMicroservices/blob/master/images/apidashboard.png)
+![alt text](https://github.com/shanepeckham/ServerlessMicroservices/blob/master/images/apimdashboard.png)
 
 Navigate to the [API Management Analytics solution](https://appsource.microsoft.com/en-us/product/web-apps/microsoft-powerbi.pbisolntemplate_apimanagement?tab=Overview) and follow the installation instructions.

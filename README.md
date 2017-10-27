@@ -37,6 +37,7 @@ Once an order is fullfilled an event will be triggered to invoke an Azure functi
 
 Below is the sample flow for the Serverless component of this solution:
 
+![alt text](https://github.com/shanepeckham/ServerlessMicroservices/blob/master/images/topology.png)
 
 # Tools required
 
@@ -64,7 +65,7 @@ Let's start by creating a Cosmos DB instance in the portal, this is a quick proc
 * Location: <yourlocation>
 
 See below:
-![alt text](https://github.com/shanepeckham/ServerlessMicroservices/blob/master/images/topology.png)
+![alt text](https://github.com/shanepeckham/ContainersOnAzure_MiniLab/blob/master/images/CosmosDB.png)
 
 Once the DB is provisioned, we need to get the Database Username and Password, these may be found in the Settings --> Connection Strings section of your DB. We will need these to run our container, so copy them for convenient access. See below:
 

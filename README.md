@@ -176,10 +176,10 @@ az container show -n go-order-sb -g <yourACIresourcegroup> -o table
 
 Once the container has moved to "Succeeded" state you will see your external IP address under the "IP:ports" column, copy this value, we will refer this this ip address as [fulfillorderIP]
 
-We will now deploy a Container Group on Azure Container Instances via a declarative 'infrastructure as code' ARM template, which is [here](https://github.com/shanepeckham/ServerlessMicroservices/blob/master/fulfillorder.json) but before we do, we need to edit this document to ensure we set our environment variables.
+We will now deploy a Container Group for the captureorder and eventlistener sidecar containers on Azure Container Instances via a declarative 'infrastructure as code' ARM template, which is [here](https://github.com/shanepeckham/ServerlessMicroservices/blob/master/ordergroup.json) but before we do, we need to edit this document to ensure we set our environment variables.
 
 
-In the document, the following section needs to be amended, adding your environment keys like you did before:
+In the json, the following section for the captureorder container needs to be amended, adding your environment keys like you did before:
 
 ```
 
@@ -215,14 +215,79 @@ In the document, the following section needs to be amended, adding your environm
                                     "name": "EVENTPOLICYKEY",
                                     "value": "[the access key from your policy]"
                                 }
+                                {
+                                    "name": "PARTITIONKEY",
+                                    "value": "[select a partition key]"
+                                }
                             ],
 ```
 
+And for the eventlistener side container, populate the following variables: 
 
+```
+"name": "[variables('container2name')]",
+                        "properties": {
+                            "image": "[variables('container2image')]",
+                            "environmentVariables": [
+                                {
+                                    "name": "EVENTHUBCONNSTRING",
+                                    "value": "Endpoint=sb://[youreventhub].servicebus.windows.net/;SharedAccessKeyName=[accesspolicyname];SharedAccessKey=[policykey]""
+                                },
+                                {
+                                    "name": "EVENTHUBPATH",
+                                    "value": "[eventhub]"
+                                },
+                                {
+                                    "name": "INSIGHTSKEY",
+                                    "value": ""
+                                },
+                                {
+                                    "name": "SOURCE",
+                                    "value": "ACI"
+                                },
+                                {
+                                    "name": "PROCESSENDPOINT",
+                                    "value": "[fulfillorderIP]:8080/v1/order/"
+                                },
+                                {
+                                    "name": "PARTITIONKEY",
+                                    "value": "[select a partition key]"
+                                }
+                            ],
+
+```
 
 
 Once this document is saved, we can create the deployment via the az CLI. Enter the following:
 
 ```
-az group deployment create --name <yourACIname> --resource-group <yourACIresourcegroup> --template-file /<path to your file>/azuredeploy.json
+az group deployment create --name <yourACIname> --resource-group <yourACIresourcegroup> --template-file /<path to your file>/ordergroup.json
 ```
+
+Once the container group has moved to "Succeeded" state you will see your external IP address under the "IP:ports" column, copy this value and navigate to http://yourACIExternalIP:8080/swagger and test your API. You should be able to place an order with the captureorder swagger harness, which will create the order in CosmosDb with a status of 'Open' and place it on the event hub partition. The eventlistener container will then pick up the message and route it to the fulfillorder container which will set the status to 'Processed'. 
+
+## 5. Register the captureorder endpoint with API Management
+
+In the API Management publisher portal, create two new products called "PayAsYouGo" and "Premium", note the syntax should be exactly the same as listed here.
+
+Now add a new API with the following settings:
+
+Web API Name: OrdersGateway
+Web Service URL: http://[captureorderIP]:8080/v1/ ** This is your ip address from the orderGroup Azure Container Instance deployed before.
+Web API URL suffix: order
+Web API URL scheme: HTTPS
+
+See below:
+
+![alt text](https://github.com/shanepeckham/ServerlessMicroservices/blob/master/images/ordergateway.png)
+
+Now click on the Products tab and select 'Add API To Products' and associate the PayAsYouGo and Premium products to the API, see below:
+
+![alt text](https://github.com/shanepeckham/ServerlessMicroservices/blob/master/images/apiproducts.png)
+
+Now click on Policies, we will add a policy to dynamically rate limit based on the user's subscription. We will and an AKS stack later, see below:
+
+![alt text](https://github.com/shanepeckham/ServerlessMicroservices/blob/master/images/apipolicy.png)
+
+
+

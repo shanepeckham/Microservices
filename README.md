@@ -5,7 +5,7 @@ Create a heterogenous, serverless microservice stack to handle orders with Chuck
 * Place an order with a chatbot running on an Azure Bot Service powered by functions and running on a serverless container
 *	Handle the order via a number of heterogenous serverless components
 *	Mail the user with order confirmations 
-* PowerBI dashboards to showcase message flows
+* PowerBI dashboards to showcase deep analytics of the API Management gateway
 
 # What does it showcase?
 
@@ -13,7 +13,11 @@ This solution aims to show how a variety of serverless components can be rapidly
 
 # The end to end scenario
 
-This solution will allow a customer to place an order for a coffee via chat bot. The order will be processed and the user will receive a notification. A customer is directed to a atechnology stack which provides an SLA related to their subscription. For example, premium customers may be routed to a fixed Azure Kubernetes service to fulfil their orders while PayAsYouGo customers are routed to a serverless stack with rate limiting applied.
+An Azure Bot service instance will run inside a container on Azure Container Instances to take orders from customers. It will then route the request to API Management which will at runtime determine the subscription level of the customer and route them to the relevant technology stack, e.g. PayAsYouGo customers get routed to a serverless stack with rate limiting, Premium customers get routed to a managed Kubernetes stack. This repo will initially start with the PayAsYouGo serverless stack, the [AKS](https://azure.microsoft.com/en-us/services/container-service/) cluster will be added soon. 
+
+An swagger enabled GO API running on Azure Container Services as part of a Container Group will handle the order and write it CosmosDb and place it on a partitioned event hub. A nodejs sidecar container running in this Container Group will listen to a specificed partition on the event hub and route the reques to another swagger enabled Go container which will fulfill the order. 
+
+Once an order is fullfilled an event will be triggered to invoke an Azure function which will notify the customer that their order has been processed via SendGrid. 
 
 # Technology used
 
@@ -29,12 +33,6 @@ The following technology components are used in this solution:
 
 # Solution Flow
 
-An Azure Bot service instance will run inside a container on Azure Container Instances to take orders from customers. It will then route the request to API Management which will at runtime determine the subscription level of the customer and route them to the relevant technology stack, e.g. PayAsYouGo customers get routed to a serverless stack with rate limiting, Premium customers get routed to a managed Kubernetes stack. This repo will initially start with the PayAsYouGo serverless stack, the [AKS](https://azure.microsoft.com/en-us/services/container-service/) cluster will be added soon. 
-
-An swagger enabled GO API running on Azure Container Services as part of a Container Group will handle the order and write it CosmosDb and place it on a partitioned event hub. A nodejs sidecar container running in this Container Group will listen to a specificed partition on the event hub and route the reques to another swagger enabled Go container which will fulfill the order. 
-
-Once an order is fullfilled an event will be triggered to invoke an Azure function which will notify the customer that their order has been processed via SendGrid. 
-
 Below is the sample flow for the Serverless component of this solution:
 
 ![alt text](https://github.com/shanepeckham/ServerlessMicroservices/blob/master/images/topology.png)
@@ -48,6 +46,7 @@ For this Lab you will require:
 * Install Kubectl, get it here - https://kubernetes.io/docs/tasks/tools/install-kubectl/
 * Install Postman, get it here - https://www.getpostman.com - this is optional but useful
 * Provision a free SendGrid account, sign up here - https://app.sendgrid.com/signup?id=71713987-9f01-4dea-b3d4-8d0bcd9d53ed
+* Get a free PowerBI account, sign up here - https://powerbi.microsoft.com/en-us/get-started/
 
 When using the Azure CLI, after logging in, if you have more than one subscripton you may need to set the default subscription you wish to perform actions against. To do this use the following command:
 

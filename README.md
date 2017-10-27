@@ -438,6 +438,11 @@ This will deploy the bot and when complete you should see something similar to t
 
 ![alt text](https://github.com/shanepeckham/ServerlessMicroservices/blob/master/images/botdeployed.png)
 
+Once the status in the continuous deployment is set to active, your bot should be good to go, see below:
+
+![alt text](https://github.com/shanepeckham/ServerlessMicroservices/blob/master/images/botrelease.png)
+
+
 This will take a minute or two to deploy. If you navigate back to the code view you should now see the following code within the first 15 or so lines:
 
 ```
@@ -447,3 +452,9 @@ var contents;
 var joke;
 var SLAKey;
 ```
+
+The last step now before we can test the bot is to navigate back to Settings and open Application Settings, here we need to create three values, namely:
+
+orderURL: [your APIM Endpoint]
+PayAsYouGo: [the PayAsYouGo subscription key]
+Premium: [the Premium subscription key]

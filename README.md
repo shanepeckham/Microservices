@@ -31,10 +31,14 @@ The following technology components are used in this solution:
 
 An Azure Bot service instance will run inside a container on Azure Container Instances to take orders from customers. It will then route the request to API Management which will at runtime determine the subscription level of the customer and route them to the relevant technology stack, e.g. PayAsYouGo customers get routed to a serverless stack with rate limiting, Premium customers get routed to a managed Kubernetes stack. This repo will initially start with the PayAsYouGo serverless stack, the [AKS](https://azure.microsoft.com/en-us/services/container-service/) cluster will be added soon. 
 
-An swagger enabled GO API running on Azure Container Services as part of a container group will handle the order and write it CosmosDb and place it on a partitioned event hub. A sidecar 
+An swagger enabled GO API running on Azure Container Services as part of a Container Group will handle the order and write it CosmosDb and place it on a partitioned event hub. A nodejs sidecar container running in this Container Group will listen to a specificed partition on the event hub and route the reques to another swagger enabled Go container which will fulfill the order. 
+
+Once an order is fullfilled an event will be triggered to invoke an Azure function which will notify the customer that their order has been processed via SendGrid. 
+
+Below is the sample flow for the Serverless component of this solution:
 
 
-# Preparing for this lab
+# Tools required
 
 For this Lab you will require:
 
@@ -42,6 +46,7 @@ For this Lab you will require:
 * Install Docker, get it here - https://docs.docker.com/engine/installation/
 * Install Kubectl, get it here - https://kubernetes.io/docs/tasks/tools/install-kubectl/
 * Install Postman, get it here - https://www.getpostman.com - this is optional but useful
+* Provision a free SendGrid account, sign up here - https://app.sendgrid.com/signup?id=71713987-9f01-4dea-b3d4-8d0bcd9d53ed
 
 When using the Azure CLI, after logging in, if you have more than one subscripton you may need to set the default subscription you wish to perform actions against. To do this use the following command:
 
@@ -59,7 +64,7 @@ Let's start by creating a Cosmos DB instance in the portal, this is a quick proc
 * Location: <yourlocation>
 
 See below:
-![alt text](https://github.com/shanepeckham/ContainersOnAzure_MiniLab/blob/master/images/CosmosDB.png)
+![alt text](https://github.com/shanepeckham/ServerlessMicroservices/blob/master/images/topology.png)
 
 Once the DB is provisioned, we need to get the Database Username and Password, these may be found in the Settings --> Connection Strings section of your DB. We will need these to run our container, so copy them for convenient access. See below:
 

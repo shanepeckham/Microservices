@@ -1,0 +1,128 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {},
+    "variables": {
+        "container1name": "captureorderfd",
+        "container1image": "shanepeckham/captureorderfd",
+        "container2name": "eventlistener",
+        "container2image": "shanepeckham/eventlistener"
+    },
+    "resources": [
+        {
+            "name": "orderGroup",
+            "type": "Microsoft.ContainerInstance/containerGroups",
+            "apiVersion": "2017-08-01-preview",
+            "location": "[resourceGroup().location]",
+             "properties": {
+                "containers": [
+                    {
+                        "name": "[variables('container1name')]",
+                        "properties": {
+                            "image": "[variables('container1image')]",
+                            "environmentVariables": [
+                                {
+                                    "name": "DATABASE",
+                                    "value": ""
+                                },
+                                {
+                                    "name": "PASSWORD",
+                                    "value": ""
+                                },
+                                {
+                                    "name": "INSIGHTSKEY",
+                                    "value": ""
+                                },
+                                {
+                                    "name": "SOURCE",
+                                    "value": "ACI"
+                                },
+                                {
+                                    "name": "EVENTURL",
+                                    "value": ""
+                                },
+                                {
+                                    "name": "EVENTPOLICYNAME",
+                                    "value": ""
+                                },
+                                {
+                                    "name": "EVENTPOLICYKEY",
+                                    "value": ""
+                                },
+                                {
+                                    "name": "PARTITIONKEY",
+                                    "value": "[select a partition key]"
+                                }
+                            ],
+                            "resources": {
+                                "requests": {
+                                    "cpu": 1,
+                                    "memoryInGb": 1.5
+                                }
+                            },
+                            "ports": [
+                                {
+                                    "port": 8080
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "name": "[variables('container2name')]",
+                        "properties": {
+                            "image": "[variables('container2image')]",
+                            "environmentVariables": [
+                                {
+                                    "name": "EVENTHUBCONNSTRING",
+                                    "value": ""
+                                },
+                                {
+                                    "name": "EVENTHUBPATH",
+                                    "value": ""
+                                },
+                                {
+                                    "name": "INSIGHTSKEY",
+                                    "value": ""
+                                },
+                                {
+                                    "name": "SOURCE",
+                                    "value": "ACI"
+                                },
+                                {
+                                    "name": "PROCESSENDPOINT",
+                                    "value": ""
+                                },
+                                {
+                                    "name": "PARTITIONKEY",
+                                    "value": "[select a partition key]"
+                                }
+                            ],
+                            "resources": {
+                                "requests": {
+                                    "cpu": 1,
+                                    "memoryInGb": 1.5
+                                }
+                            }
+                        }
+                    }
+                ],
+                "osType": "Linux",
+                "ipAddress": {
+                    "type": "Public",
+                    "ports": [
+                        {
+                            "protocol": "tcp",
+                            "port": "8080"
+                        }
+                    ]
+                }
+            }
+        }
+    ],
+    "outputs": {
+        "containerIPv4Address": {
+            "type": "string",
+            "value": "[reference(resourceId('Microsoft.ContainerInstance/containerGroups/', 'orderGroup')).ipAddress.ip]"
+        }
+    }
+}

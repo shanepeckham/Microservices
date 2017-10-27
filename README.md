@@ -398,30 +398,52 @@ Click 'Create Microsoft App Id and Password'. This will open up a new window whe
 
 This will open up a popup with your password in, copy this value for immediate reuse. Note, it only appears this once. Click 'Finish and go back to Bot Framework'. Paste your password in the entry box.
 
-Now select 'NodeJS' in the Choose a Language section and select 'Basic' in the Choose a Template section (at the time of writing this a necessary step even though our code will overwrite these settings) and click 'Create Bot', see below:
+Now select 'NodeJS' in the Choose a Language section and select 'Form' in the Choose a Template section (at the time of writing this a necessary step even though our code will overwrite these settings) and click 'Create Bot', see below:
 
-![alt text](https://github.com/shanepeckham/CADScenario_Personalisation/blob/master/images/botsetup3.png)
+![alt text](https://github.com/shanepeckham/ServerlessMicroservices/blob/master/images/botlang.png)
 
-This will take roughly 2-3 minutes, once complete you will be navigated to the code view of the Bot. If all has provisioned correctly you will see the status 'Edit continuous integration'. Click on settings to check the status of the code deploy, see below:
+This will take roughly 2-3 minutes, once complete you will be navigated to the code view of the Bot. Click on the Settings tab and select the Continuous Deployment section, select the "I completed step 2 and can proceed to step 3" checkbox, then click Configure in step 3, see below:
 
-![alt text](https://github.com/shanepeckham/CADScenario_Personalisation/blob/master/images/botsetup4.png)
+![alt text](https://github.com/shanepeckham/ServerlessMicroservices/blob/master/images/botcheck.png)
 
-Now click on the 'Edit' dropdown on the right of the screen in the Continuous Integration section, see below:
+Select Setup and choose Local Git Repository as the source for the Deployment Option.
 
-![alt text](https://github.com/shanepeckham/CADScenario_Personalisation/blob/master/images/botsetup5.png)
+![alt text](https://github.com/shanepeckham/ServerlessMicroservices/blob/master/images/botlocalgit.png)
 
-This will open the Continuous Integration menu. Here you can see the status of the code deploy, see below. Select the Configure Continuous Integration button. 
+Now open a command window and find a suitable location in your directory structure and type:
 
-![alt text](https://github.com/shanepeckham/CADScenario_Personalisation/blob/master/images/botsetup6.png)
+```
+git clone https://github.com/shanepeckham/ServerlessMicroservices.git
+cd fdcoffeebot
+```
+You should see the files listed below:
 
-This will open a blade on the right which will display the status of the deployment source and latest commit, see below:
+![alt text](https://github.com/shanepeckham/ServerlessMicroservices/blob/master/images/botfiles.png)
 
-![alt text](https://github.com/shanepeckham/CADScenario_Personalisation/blob/master/images/botsetup7.png)
+Now navigate back to the bot and select Open in the Advanced Settings section, copy the value in Git Clone URL, see below:
 
-Now click on the latest commit, it will open another blade with a 'Redeploy' button, select it. See below:
+![alt text](https://github.com/shanepeckham/ServerlessMicroservices/blob/master/images/gitcloneurl.png)
 
-![alt text](https://github.com/shanepeckham/CADScenario_Personalisation/blob/master/images/botsetup8.png)
+Back in terminal window type the following:
 
-If you navigate back to the code view you should now see the first question "What is your email address?" with the chat emulator loaded to the left. See below:
+```
+git init
+git remote add Azure [paste your git clone url]
+git add . 
+git commit -m "Bot release"
+git push Azure master
+```
 
-![alt text](https://github.com/shanepeckham/CADScenario_Personalisation/blob/master/images/botsetup9.png)
+This will deploy the bot and when complete you should see something similar to the following:
+
+![alt text](https://github.com/shanepeckham/ServerlessMicroservices/blob/master/images/botdeployed.png)
+
+This will take a minute or two to deploy. If you navigate back to the code view you should now see the following code within the first 15 or so lines:
+
+```
+var orderURL = process.env.orderURL;
+var feedback;
+var contents;
+var joke;
+var SLAKey;
+```

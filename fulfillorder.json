@@ -4,7 +4,7 @@
     "parameters": {},
     "variables": {
         "container1name": "fulfillorderfd",
-        "container1image": "cadcontainerregistry.azurecr.io/fulfillorderfd"
+        "container1image": "shanepeckham/fulfillorderfd"
     },
     "resources": [
         {

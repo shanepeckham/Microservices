@@ -222,7 +222,7 @@ In the json, the following section for the captureorder container needs to be am
                             ],
 ```
 
-And for the eventlistener side container, populate the following variables: 
+And for the eventlistener sidecar container, populate the following variables: 
 
 ```
 "name": "[variables('container2name')]",
@@ -277,6 +277,10 @@ Web Service URL: http://[captureorderIP]:8080/v1/ ** This is your ip address fro
 Web API URL suffix: order
 Web API URL scheme: HTTPS
 
+Add an operation to the API called PlaceOrder, see below:
+
+![alt text](https://github.com/shanepeckham/ServerlessMicroservices/blob/master/images/apioperation.png)
+
 See below:
 
 ![alt text](https://github.com/shanepeckham/ServerlessMicroservices/blob/master/images/ordergateway.png)
@@ -285,9 +289,93 @@ Now click on the Products tab and select 'Add API To Products' and associate the
 
 ![alt text](https://github.com/shanepeckham/ServerlessMicroservices/blob/master/images/apiproducts.png)
 
-Now click on Policies, we will add a policy to dynamically rate limit based on the user's subscription. We will and an AKS stack later, see below:
+Now click on Policies and select the OrdersGateway API with method PlaceOrder, we will add a policy to dynamically rate limit based on the user's subscription. We will and an AKS stack later, see below:
 
 ![alt text](https://github.com/shanepeckham/ServerlessMicroservices/blob/master/images/apipolicy.png)
 
+Add the following policy:
 
+```
+<policies>
+	<inbound>
+		<base />
+		<choose>
+			<when condition="@(context.Product.Name.Equals("PayAsYouGo"))">
+				<rate-limit-by-key calls="100" renewal-period="60" increment-condition="@(context.Response.StatusCode == 200)" counter-key="@(context.Request.IpAddress)" />
+			</when>
+			<when condition="@(context.Product.Name.Equals("Premium"))">
+				<rate-limit-by-key calls="1000" renewal-period="60" increment-condition="@(context.Response.StatusCode == 200)" counter-key="@(context.Request.IpAddress)" />
+			</when>
+		</choose>
+		<send-request mode="copy" response-variable-name="response" timeout="10" ignore-error="true">
+			<set-method>POST</set-method>
+			<set-header name="Content-Type" exists-action="override">
+				<value>application/json</value>
+			</set-header>
+			<set-body>@{   
+                            var source = context.Product.Name;
+                            JObject inBody = context.Request.Body.As<JObject>();
+                            var postBody = new JObject(
+                            new JProperty("EmailAddress", inBody["EmailAddress"]),
+                            new JProperty("PreferredLanguage", inBody["PreferredLanguage"]),
+                            new JProperty("Product", inBody["Product"]),
+                            new JProperty("Status", inBody["Status"]),
+                            new JProperty("Source", source)
+                            ).ToString();
+                            
+                        return postBody;
 
+                        }</set-body>
+		</send-request>
+	</inbound>
+	<backend>
+		<base />
+	</backend>
+	<outbound>
+		<base />
+	</outbound>
+	<on-error>
+		<base />
+	</on-error>
+</policies>
+
+```
+
+This section will determine the subscription level of the requestor and apply a rate limit of 100 calls per 60 seconds for PayAsYouGo and 1000 calls per 60 seconds for Premium:
+```
+<choose>
+			<when condition="@(context.Product.Name.Equals("PayAsYouGo"))">
+				<rate-limit-by-key calls="100" renewal-period="60" increment-condition="@(context.Response.StatusCode == 200)" counter-key="@(context.Request.IpAddress)" />
+			</when>
+			<when condition="@(context.Product.Name.Equals("Premium"))">
+				<rate-limit-by-key calls="1000" renewal-period="60" increment-condition="@(context.Response.StatusCode == 200)" counter-key="@(context.Request.IpAddress)" />
+			</when>
+		</choose>
+```
+
+This section will intercept the incoming json, amend it and reforward it to our backend.
+
+```
+	<send-request mode="copy" response-variable-name="response" timeout="10" ignore-error="true">
+			<set-method>POST</set-method>
+			<set-header name="Content-Type" exists-action="override">
+				<value>application/json</value>
+			</set-header>
+			<set-body>@{   
+                            var source = context.Product.Name;
+                            JObject inBody = context.Request.Body.As<JObject>();
+                            var postBody = new JObject(
+                            new JProperty("EmailAddress", inBody["EmailAddress"]),
+                            new JProperty("PreferredLanguage", inBody["PreferredLanguage"]),
+                            new JProperty("Product", inBody["Product"]),
+                            new JProperty("Status", inBody["Status"]),
+                            new JProperty("Source", source)
+                            ).ToString();
+                            
+                        return postBody;
+
+                        }</set-body>
+		</send-request>
+
+```
+   

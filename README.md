@@ -378,4 +378,10 @@ This section will intercept the incoming json, amend it and reforward it to our 
 		</send-request>
 
 ```
-   
+You should now be able to test your API Management endpoint and see the request flow through the Azure Container Instances with the status of the order changing in CosmosDb.
+
+## 6. Deploy the API Management analytics solution
+
+![alt text](https://github.com/shanepeckham/ServerlessMicroservices/blob/master/images/apidashboard.png)
+
+Navigate to the [API Management Analytics solution](https://appsource.microsoft.com/en-us/product/web-apps/microsoft-powerbi.pbisolntemplate_apimanagement?tab=Overview) and follow the installation instructions.

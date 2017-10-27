@@ -77,11 +77,15 @@ This will take a few minutes.
 
 Navigate to the Azure portal and create a new Azure event hub instance, enter the following parameters:
 
+![alt text](https://github.com/shanepeckham/ServerlessMicroservices/blob/master/images/eh1.png)
+
 * Name: <yourinstancename>
 * ResourceGroup: <yourresourcegroup>
 * Location: <yourlocation>
 
-This will take a few minutes. Once this has completed add an event hub, give it a partition count of 2 (the default) 
+This will take a few minutes. Once this has completed add an event hub, give it a partition count of 2 (the default), see below:
+
+![alt text](https://github.com/shanepeckham/ServerlessMicroservices/blob/master/images/eh2.png)
 
 ## 4. Deploy the containers to Azure Container Instance
 

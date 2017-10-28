@@ -477,14 +477,27 @@ See below:
 
 ## 8. Embed the Bot Service app inside a container and deploy it to an Azure Container Instance
 
-We will deploy a container to house our Bot so that it can be accessed on the web, using the same method as we did before, we only need to populate one environment variable in the container, namely the Bot's Web Chat secret key. In the Bot navigate to Channels, and select Edit on the Web Chat channel.
+We will deploy a container to house our Bot so that it can be accessed on the web, using the same method as we did before, we only need to populate one environment variable in the container, namely the Bot's Web Chat iframe and secret key. In the Bot navigate to Channels, and select Edit on the Web Chat channel, see below:
 
-Click Show on the primary secret key and copy. We will refer to is as [BotKey] from now on.
+![alt text](https://github.com/shanepeckham/ContainersOnAzure_MiniLab/blob/master/images/botkey.png)
+
+Copy the only this part of value in the field Embed Code, like this:
+
+```
+https://webchat.botframework.com/embed/testbotdeleteme?s=YOUR_SECRET_HERE
+```
+
+Now click Show on the primary secret key and copy it, replace the value above [YOUR_SECRET_HERE] with the primary key so that it looks like this:
+
+```
+https://webchat.botframework.com/embed/testbotdeleteme?s=[You primary secrect key]
+
+```
 
 We will now deploy our container instance via a declarative 'infrastructure as code' ARM template, which is [here](https://github.com/shanepeckham/ServerlessMicroservices/blob/master/botwebsite.json) but before we do, we need to edit this document to ensure we set our environment variable for the Bot Key.
 
 
-In the document, the following section needs to be amended, adding your environment keys like you did before:
+In the document, the following section needs to be amended, adding the environment key like you did before:
 
 ```
 {
@@ -493,9 +506,10 @@ In the document, the following section needs to be amended, adding your environm
                             "image": "[variables('container1image')]",
                             "environmentVariables": [
                                 {
-                                    "name": "BOTKEY",
-                                    "value": "[BotKey]"
+                                    "name": "BOTURL",
+                                    "value": "https://webchat.botframework.com/embed/testbotdeleteme?s=[You primary secrect key]"
                                 }
                             ],
 
 ```
+

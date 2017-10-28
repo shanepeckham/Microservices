@@ -20,7 +20,7 @@
                             "image": "[variables('container1image')]",
                             "environmentVariables": [
                                 {
-                                    "name": "BOTKEY",
+                                    "name": "BOTURL",
                                     "value": ""
                                 }
                             ],

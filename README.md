@@ -513,3 +513,15 @@ In the document, the following section needs to be amended, adding the environme
 
 ```
 
+Once this document is saved, we can create the deployment via the az CLI. Enter the following:
+
+```
+az group deployment create --name <yourACIname> --resource-group <yourACIresourcegroup> --template-file /<path to your file>/botwebsite.json
+```
+
+Once deployed, if you navigate to [yourACIName IP address]:8080 you should see your website where you can interact with your bot and place an order and get a Chuck Norris joke courtesy of The Internet Chuck Norris Dabatase.
+
+## 9. Create an Azure Function to notify users that their order has been processed
+
+We will now create an event driven function to notify the user via email when their order has been processed.
+

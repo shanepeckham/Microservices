@@ -543,12 +543,12 @@ SendGridKey: [SendGridAPIKey]
 
 Now in the Integrate section of your Function, bind the function to your ComsmosDb and SendGrid instances. Firstly in the Triggers section, add a new input with the folloing settings in Azure Cosmos TB Trigger section:
 
-Document collection parameter name: inputDocuments
-Database name: (Your CosmosDb name]
-Collection name for leases: processed
-CosmosDB Account connection: Here you can select your database instance from the dropdown
-Collection name: orders
-Create lease collection if it does not exist: true
+* Document collection parameter name: inputDocuments
+* Database name: (Your CosmosDb name]
+* Collection name for leases: processed
+* CosmosDB Account connection: Here you can select your database instance from the dropdown
+* Collection name: orders
+* Create lease collection if it does not exist: true
 
 See below:
 
@@ -556,13 +556,13 @@ See below:
 
 Now in the Outputs and an out for SendGrid with the following values:
 
-Message parameter name: $return
-Use function return value: True
-To Address: Can be blank as we will set it in code dynamically
-Message Subject: SendGrid output bindings
-SendGrid API Key App Setting: Select the application setting SendGridKey from the dropdown
-From Address: We will set this dynamically in code
-Message Text: We will set this in code
+* Message parameter name: $return
+* Use function return value: True
+* To Address: Can be blank as we will set it in code dynamically
+* Message Subject: SendGrid output bindings
+* SendGrid API Key App Setting: Select the application setting SendGridKey from the dropdown
+* From Address: We will set this dynamically in code
+* Message Text: We will set this in code
 
 See below:
 

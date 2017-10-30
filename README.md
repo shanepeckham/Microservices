@@ -1,4 +1,4 @@
-# Create an end to end serverless microservices stack rapidly to handle orders
+# Create an end to end (mostly) serverless microservices stack rapidly to handle orders
 Create a heterogenous, serverless microservice stack to handle orders with Chuck Norris jokes thrown in
 
 # What is it?

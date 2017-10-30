@@ -42,6 +42,7 @@ Below is the sample flow for the Serverless component of this solution:
 For this Lab you will require:
 
 * Install the Azure CLI 2.0, get it here - https://docs.microsoft.com/en-us/cli/azure/install-azure-cli
+* Install git command line tools, get it here - https://git-scm.com/downloads
 * Install Postman, get it here - https://www.getpostman.com - this is optional but useful
 * Provision a free SendGrid account, sign up here - https://app.sendgrid.com/signup?id=71713987-9f01-4dea-b3d4-8d0bcd9d53ed
 * Get a free PowerBI account, sign up here - https://powerbi.microsoft.com/en-us/get-started/

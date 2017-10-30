@@ -17,16 +17,14 @@ spec:
         image: cadcontainerregistry.azurecr.io/eventlistener
         env:
         - name: EVENTHUBCONNSTRING
-          value: "Endpoint=sb://coffee.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=2dXz/klqlCd2YLEaUp1D91p2q1bgaW9F/ZJSt39yT3I="
+          value: ""
         - name: EVENTHUBPATH
           value: "orders"
         - name: INSIGHTSKEY
-          value: "23c6b1ec-ca92-4083-86b6-eba851af9032"
+          value: ""
         - name: SOURCE
           value: "K8"
         - name: PARTITIONKEY
           value: "0"
         - name: PROCESSENDPOINT
-          value: "http://52.236.37.39:8080/v1/order/"
-      imagePullSecrets:
-        - name: cadcontainerregistry
+          value: ""

@@ -85,7 +85,6 @@ bot.dialog('/', [
         request(options, function (error, response, body) {
             if (!error && response.statusCode == 200) {
                    feedback = JSON.stringify(body);
-                   session.send(util.inspect(feedback, {showHidden: false, depth: null})); 
             }
             else
             {

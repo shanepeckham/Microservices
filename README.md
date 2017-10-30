@@ -26,7 +26,7 @@ The following technology components are used in this solution:
 *	Azure Bot Service running on Azure Container Instances and powered by Azure Functions
 *	Azure API Management to apply a Gatekeeper, strangler, circuit breaker and throttling pattern
 * A Golang container with a node.js sidecar running as a container group within Azure Container Services
-* Azure event hubs to handle asynchronous messaging and to decouple some the micro services
+* Azure event hubs to handle asynchronous messaging and to decouple the micro services
 * Azure CosmosDB to provide a low-latency, globally distributed serverless database which may be used as an event store
 * Azure functions to provide event driven compute to do transformations and send email notifications via SendGrid
 * PowerBI to monitor all incoming requests to API Management and provide rich dashboards

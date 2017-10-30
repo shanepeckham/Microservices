@@ -42,8 +42,6 @@ Below is the sample flow for the Serverless component of this solution:
 For this Lab you will require:
 
 * Install the Azure CLI 2.0, get it here - https://docs.microsoft.com/en-us/cli/azure/install-azure-cli
-* Install Docker, get it here - https://docs.docker.com/engine/installation/
-* Install Kubectl, get it here - https://kubernetes.io/docs/tasks/tools/install-kubectl/
 * Install Postman, get it here - https://www.getpostman.com - this is optional but useful
 * Provision a free SendGrid account, sign up here - https://app.sendgrid.com/signup?id=71713987-9f01-4dea-b3d4-8d0bcd9d53ed
 * Get a free PowerBI account, sign up here - https://powerbi.microsoft.com/en-us/get-started/
@@ -521,7 +519,80 @@ az group deployment create --name <yourACIname> --resource-group <yourACIresourc
 
 Once deployed, if you navigate to [yourACIName IP address]:8080 you should see your website where you can interact with your bot and place an order and get a Chuck Norris joke courtesy of The Internet Chuck Norris Dabatase.
 
-## 9. Create an Azure Function to notify users that their order has been processed
+## 9. Sign up for a free SendGrid account so that you can send emails for free
 
-We will now create an event driven function to notify the user via email when their order has been processed.
+Provision a free SendGrid account, sign up here - https://app.sendgrid.com/signup?id=71713987-9f01-4dea-b3d4-8d0bcd9d53ed
 
+Store your SendGrid API key which will now refer to as [SendGridAPIKey]
+
+## 10. Create an Azure Function to notify users that their order has been processed
+
+We will now create an event driven function to notify the user via email when their order has been processed. Create a new Azure function and select Language: Javascript, Scenario: Data Processing and select Template CosmosDb trigger, see below:
+
+![alt text](https://github.com/shanepeckham/ContainersOnAzure_MiniLab/blob/master/images/functemp.png)
+
+Once created. navigate to Platform Features --> Application Settings where we will add the [SendGridAPIKey] as a configuration setting independant of the Function code.
+
+Add the following entryand Save:
+
+SendGridKey: [SendGridAPIKey]
+
+Now in the Integrate section of your Function, bind the function to your ComsmosDb and SendGrid instances. Firstly in the Triggers section, add a new input with the folloing settings in Azure Cosmos TB Trigger section:
+
+Document collection parameter name: inputDocuments
+Database name: (Your CosmosDb name]
+Collection name for leases: processed
+CosmosDB Account connection: Here you can select your database instance from the dropdown
+Collection name: orders
+Create lease collection if it does not exist: true
+
+See below:
+
+![alt text](https://github.com/shanepeckham/ContainersOnAzure_MiniLab/blob/master/images/dbinputs.png)
+
+Now in the Outputs and an out for SendGrid with the following values:
+
+Message parameter name: $return
+Use function return value: True
+To Address: Can be blank as we will set it in code dynamically
+Message Subject: SendGrid output bindings
+SendGrid API Key App Setting: Select the application setting SendGridKey from the dropdown
+From Address: We will set this dynamically in code
+Message Text: We will set this in code
+
+See below:
+
+![alt text](https://github.com/shanepeckham/ContainersOnAzure_MiniLab/blob/master/images/dboutputs.png)
+
+Once this is down you can paste the folllowing code into your Function:
+
+```
+
+var to;
+var message;
+
+module.exports = function (context, myQueueItem) {
+    context.log('Order: ' + myQueueItem[0].$v.id.$v + ' - Status:' + myQueueItem[0].$v.status.$v);
+    context.bindings.message = {};
+
+    if (myQueueItem[0].$v.emailaddress.$v != "" || myQueueItem[0].$v.emailaddress.$v != "string" && myQueueItem[0].$v.status.$v == 'Processed' ) {
+        to = myQueueItem[0].$v.emailaddress.$v;
+        var input = "Your " + myQueueItem[0].$v.product.$v + " with order id " + myQueueItem[0].$v.id.$v + " has been processed";
+        var message = {
+            "personalizations": [ { "to": [ { "email": to } ] } ],
+            from: { email: "fdcoffeebot@coffeeandchucknorrisjokes.com" },        
+            subject: "Your " + myQueueItem[0].$v.product.$v + " has been processed",
+            content: [{
+                type: 'text/plain',
+                value: input
+            }]
+    };
+    }
+
+    context.done(null, message);
+    return message;
+};
+
+```
+
+The end to end solution is now set up and shold be able to test it.

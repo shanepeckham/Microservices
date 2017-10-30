@@ -471,7 +471,7 @@ In the Azure portal, navigate back to your Cosmos DB instance and go to the sect
 
 See below:
 
-![alt text](https://github.com/shanepeckham/ServerlessMicroservices/blob/master/images/CosmosQuery.png)
+![alt text](https://github.com/shanepeckham/ContainersOnAzure_MiniLab/blob/master/images/CosmosQuery.png)
 
 ## 8. Embed the Bot Service app inside a container and deploy it to an Azure Container Instance
 

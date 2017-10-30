@@ -517,7 +517,10 @@ Once this document is saved, we can create the deployment via the az CLI. Enter 
 az group deployment create --name <yourACIname> --resource-group <yourACIresourcegroup> --template-file /<path to your file>/botwebsite.json
 ```
 
-Once deployed, if you navigate to [yourACIName IP address]:8080 you should see your website where you can interact with your bot and place an order and get a Chuck Norris joke courtesy of The Internet Chuck Norris Dabatase.
+Once deployed, if you navigate to [yourACIName IP address]:8080 you should see your website where you can interact with your bot and place an order and get a Chuck Norris joke courtesy of The Internet Chuck Norris Dabatase,  see below:
+
+![alt text](https://github.com/shanepeckham/ServerlessMicroservices/blob/master/images/bot.png)
+
 
 ## 9. Sign up for a free SendGrid account so that you can send emails for free
 

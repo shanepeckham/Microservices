@@ -471,13 +471,13 @@ In the Azure portal, navigate back to your Cosmos DB instance and go to the sect
 
 See below:
 
-![alt text](https://github.com/shanepeckham/ContainersOnAzure_MiniLab/blob/master/images/CosmosQuery.png)
+![alt text](https://github.com/shanepeckham/ServerlessMicroservices/blob/master/images/CosmosQuery.png)
 
 ## 8. Embed the Bot Service app inside a container and deploy it to an Azure Container Instance
 
 We will deploy a container to house our Bot so that it can be accessed on the web, using the same method as we did before, we only need to populate one environment variable in the container, namely the Bot's Web Chat iframe and secret key. In the Bot navigate to Channels, and select Edit on the Web Chat channel, see below:
 
-![alt text](https://github.com/shanepeckham/ContainersOnAzure_MiniLab/blob/master/images/botkey.png)
+![alt text](https://github.com/shanepeckham/ServerlessMicroservices/blob/master/images/botkey.png)
 
 Copy the only this part of value in the field Embed Code, like this:
 
@@ -529,7 +529,7 @@ Store your SendGrid API key which will now refer to as [SendGridAPIKey]
 
 We will now create an event driven function to notify the user via email when their order has been processed. Create a new Azure function and select Language: Javascript, Scenario: Data Processing and select Template CosmosDb trigger, see below:
 
-![alt text](https://github.com/shanepeckham/ContainersOnAzure_MiniLab/blob/master/images/functemp.png)
+![alt text](https://github.com/shanepeckham/ServerlessMicroservices/blob/master/images/functemp.png)
 
 Once created. navigate to Platform Features --> Application Settings where we will add the [SendGridAPIKey] as a configuration setting independant of the Function code.
 
@@ -548,7 +548,7 @@ Create lease collection if it does not exist: true
 
 See below:
 
-![alt text](https://github.com/shanepeckham/ContainersOnAzure_MiniLab/blob/master/images/dbinputs.png)
+![alt text](https://github.com/shanepeckham/ServerlessMicroservices/blob/master/images/dbinputs.png)
 
 Now in the Outputs and an out for SendGrid with the following values:
 
@@ -562,7 +562,7 @@ Message Text: We will set this in code
 
 See below:
 
-![alt text](https://github.com/shanepeckham/ContainersOnAzure_MiniLab/blob/master/images/dboutputs.png)
+![alt text](https://github.com/shanepeckham/ServerlessMicroservices/blob/master/images/dboutputs.png)
 
 Once this is down you can paste the folllowing code into your Function:
 

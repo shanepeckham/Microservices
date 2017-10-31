@@ -1,6 +1,8 @@
 # Create an end to end (mostly) serverless microservices stack rapidly to handle orders
 Create a heterogenous, serverless microservice stack to handle orders with Chuck Norris jokes thrown in
 
+![Output sample](https://github.com/ajasmin/camstudio-mousedown-highlight/raw/master/android_vid_test.gif)
+
 # What is it?
 * Place an order with a chatbot running on an Azure Bot Service powered by functions and running on a serverless container
 *	Handle the order via a number of heterogenous serverless components

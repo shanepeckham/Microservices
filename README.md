@@ -41,7 +41,7 @@ Below is the sample flow for the Serverless component of this solution:
 
 # Tools required
 
-For this Lab you will require:
+You will require:
 
 * Install the Azure CLI 2.0, get it here - https://docs.microsoft.com/en-us/cli/azure/install-azure-cli
 * Install git command line tools, get it here - https://git-scm.com/downloads

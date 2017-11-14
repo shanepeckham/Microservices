@@ -172,7 +172,7 @@ It is also possible to create the container instance via the Azure CLI directly,
 You can check the status of the deployment by issuing the container list command:
 
 ```
-az container show -n go-order-sb -g <yourACIresourcegroup> -o table
+az container show -n <yourACIname> -g <yourACIresourcegroup> -o table
 ```
 
 Once the container has moved to "Succeeded" state you will see your external IP address under the "IP:ports" column, copy this value, we will refer this this ip address as [fulfillorderIP]

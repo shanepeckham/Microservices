@@ -1,0 +1,27 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: fulfillorder
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: fulfillorder
+    spec:      
+      containers:
+        - name: fulfillorder
+          image: shanepeckham/hackfulfillorder:v2
+          ports:
+          - containerPort: 8081
+          imagePullPolicy: Always
+          env:
+           -  name:  "MONGOHOST"
+              value: ""
+          volumeMounts:
+          - mountPath: "/orders"
+            name: orders
+      volumes:
+      - name: orders
+        persistentVolumeClaim: 
+          claimName: ordersclaim

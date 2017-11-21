@@ -1,0 +1,22 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: captureorder
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: captureorder
+    spec:      
+      containers:
+        - name: captureorder
+          image: shanepeckham/hackcaptureorder:v2
+          ports:
+          - containerPort: 8080
+          imagePullPolicy: Always
+          env:
+           -  name:  "MONGOHOST"
+              value: ""
+           -  name: "RABBITMQHOST"
+              value: ""
